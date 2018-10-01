@@ -256,7 +256,8 @@ class API {
 
             if ($response->getStatusCode() == 401 && $body['error'] == 'invalid_token') {
                 $this->setToken(null);
-                return $this->callAPI($api, $query);
+                $args = func_get_args();
+                return call_user_func_array([$this, __METHOD__], $args);
             }
 
             throw $e;
