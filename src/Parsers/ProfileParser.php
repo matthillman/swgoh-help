@@ -2,7 +2,6 @@
 
 namespace SwgohHelp;
 
-use App\ModUser;
 use Carbon\Carbon;
 
 class ProfileParser {
