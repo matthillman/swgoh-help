@@ -24,6 +24,10 @@ class SwgohHelpServiceProvider extends ServiceProvider
             return new Client($config);
         });
 
+        $this->app->bind('goutte', function () {
+            return new Client;
+        });
+
         config([
             'redirect.history.header' => RedirectMiddleware::HISTORY_HEADER
         ]);

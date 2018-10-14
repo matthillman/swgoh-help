@@ -58,46 +58,46 @@ class API {
         return $this->callAPI(static::API_PLAYER, $data);
     }
 
-    public function getUnits($allyCode, $mods = false, $projection = []) {
+    public function getUnits($allyCode, $mods = false/*, $projection = []*/) {
         $data = [
             "allycode" => $allyCode,
             "mods" => $mods,
             "language" => $this->lang,
             "enums" => $this->enums,
-            "project" => array_merge([
-                "player" => 0,
-                "allyCode" => 0,
-                "starLevel" => 1,
-                "level" => 1,
-                "gearLevel" => 1,
-                "gear" => 1,
-                "zetas" => 1,
-                "type" => 1,
-                "mods" => $mods ? 1 : 0,
-                "gp" => 1,
-                "updated" => 0,
-            ], $projection),
+            // "project" => array_merge([
+            //     "player" => 0,
+            //     "allyCode" => 0,
+            //     "starLevel" => 1,
+            //     "level" => 1,
+            //     "gearLevel" => 1,
+            //     "gear" => 1,
+            //     "zetas" => 1,
+            //     "type" => 1,
+            //     "mods" => $mods ? 1 : 0,
+            //     "gp" => 1,
+            //     "updated" => 0,
+            // ], $projection),
         ];
 
         return $this->callAPI(static::API_UNITS, $data);
     }
 
     public function getMods($allyCode) {
-        $data = [
-            "player" => 0,
-            "allyCode" => 0,
-            "starLevel" => 0,
-            "level" => 0,
-            "gearLevel" => 0,
-            "gear" => 0,
-            "zetas" => 0,
-            "type" => 0,
-            "mods" => 1,
-            "gp" => 0,
-            "updated" => 0,
-        ];
+        // $data = [
+        //     "player" => 0,
+        //     "allyCode" => 0,
+        //     "starLevel" => 0,
+        //     "level" => 0,
+        //     "gearLevel" => 0,
+        //     "gear" => 0,
+        //     "zetas" => 0,
+        //     "type" => 0,
+        //     "mods" => 1,
+        //     "gp" => 0,
+        //     "updated" => 0,
+        // ];
 
-        return $this->getUnits($allyCode, true, $data);
+    return $this->getUnits($allyCode, true/*, $data*/);
     }
 
     public function getGuild($allyCode, Callable $memberCallback, $fullRoster = false, $mods = false, $projection = []) {

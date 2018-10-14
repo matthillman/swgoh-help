@@ -25,13 +25,16 @@ class ModsParser {
 
                             $pRaw = array_shift($mod['stat']);
                             $primary = [
-                                'type' => $pRaw[0],
-                                'value' => $pRaw[1],
+                                'type' => $mod['primaryStat']['unitStat'],
+                                'value' => $mod['primaryStat']['value'],
                             ];
 
-                            $secondaries = collect($mod['stat'])
+                            $secondaries = collect($mod['secondaryStat'])
                                 ->mapWithKeys(function($stat) {
-                                    return [$stat[0] => $stat[1]];
+                                    return [$stat['unitStat'] => [
+                                        'value' => $stat['value'],
+                                        'roll' => $stat['roll'],
+                                    ]];
                                 });
 
                             unset($mod['stat']);
