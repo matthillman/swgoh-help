@@ -26,7 +26,7 @@ class GuildParser {
         $this->url = head($response->getHeader(config('redirect.history.header')));
         $anAllyCode = $this->getAnAllyCode();
 
-        $this->data = swgoh()->getGuild($anAllyCode, $memberCallback, SWGOH::FULL_ROSTER);
+        $this->data = swgoh()->getGuild($anAllyCode, $memberCallback, SWGOH::FULL_ROSTER)->first();
 
         return $this;
     }
