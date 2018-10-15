@@ -233,8 +233,8 @@ class API {
 
     protected function getTokenFields() {
         return [
-            'client_id' => config('services.swgoh_help.client_id'),
-            'client_secret' => config('services.swgoh_help.client_id'),
+            'client_id' => config('services.swgoh_help.client_id', 'abc'),
+            'client_secret' => config('services.swgoh_help.client_id', '123'),
             'username' => config('services.swgoh_help.user'),
             'password' => config('services.swgoh_help.password'),
             'grant_type' => 'password',
