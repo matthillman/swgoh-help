@@ -129,7 +129,7 @@ class API {
                 "message" => 1,
                 "gp" => 1,
                 "raid" => 0,
-                "roster" => $fullRoster == static::FULL_UNITS ? $rosterInner : $fullRoster == static::FULL_UNITS ? [
+                "roster" => $fullRoster == static::FULL_UNITS ? $rosterInner : $fullRoster == static::FULL_ROSTER ? [
                     "allyCode" => 1,
                     "name" => 1,
                     "level" => 1,
