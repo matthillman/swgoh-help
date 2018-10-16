@@ -11,7 +11,9 @@
     ],
     "require": {
         "php": "^7.1.3",
+        "fabpot/goutte": "^3.2",
         "guzzlehttp/guzzle": "~6.0",
+        "illuminate/support": "~5.4",
         "myclabs/php-enum": "^1.6",
         "salsify/json-streaming-parser": "^7.0"
     },

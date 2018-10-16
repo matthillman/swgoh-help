@@ -31,8 +31,8 @@ class API {
      */
     protected $httpClient;
 
-    protected $enums = true;
-    protected $lang = 'eng_us';
+    public $enums = true;
+    public $lang = 'eng_us';
 
     private $clientID;
     private $clientSecret;
@@ -97,10 +97,20 @@ class API {
             "updated" => 0,
         ];
 
-    return $this->getUnits($allyCode, true, $data);
+        return $this->getUnits($allyCode, true, $data);
     }
 
     public function getGuild($allyCode, Callable $memberCallback, $fullRoster = false, $mods = false, $projection = []) {
+        $rosterInner = [
+            "defId" => 1,
+            "rarity" => 1,
+            "level" => 1,
+            "gear" => 1,
+            "combatType" => 1,
+            "gp" => 1,
+            "skills" => 1,
+            "mods" => $mods ? 1 : 0,
+        ];
         $data = [
             "allycode" => $allyCode,
             "roster" => $fullRoster == static::FULL_ROSTER,
@@ -119,24 +129,15 @@ class API {
                 "message" => 1,
                 "gp" => 1,
                 "raid" => 0,
-                "roster" => [
+                "roster" => $fullRoster == static::FULL_UNITS ? $rosterInner : $fullRoster == static::FULL_UNITS ? [
                     "allyCode" => 1,
                     "name" => 1,
                     "level" => 1,
                     "stats" => 1,
-                    "roster" => [
-                        "defId" => 1,
-                        "rarity" => 1,
-                        "level" => 1,
-                        "gear" => 1,
-                        "combatType" => 1,
-                        "gp" => 1,
-                        "skills" => 1,
-                        "mods" => $mods ? 1 : 0,
-                    ],
+                    "roster" => $rosterInner,
                     "arena" => 1,
                     "updated" => 1,
-                ],
+                ] : 0,
                 "updated" => 0,
             ], $projection),
         ];
@@ -144,12 +145,12 @@ class API {
         return $this->callAPI(static::API_GUILD, $data, $memberCallback);
     }
 
-    public function getUnitData($projection = []) {
+    public function getUnitData($match = [], $projection = []) {
         $data = [
             "collection" => "unitsList",
             "language" => $this->lang,
             "enums" => $this->enums,
-            "match" => [ "rarity" => 7 ],
+            "match" => array_merge([ "rarity" => 7 ], $match),
             "project" => array_merge([
                 "baseId" => 1,
                 "nameKey" => 1,
@@ -213,6 +214,46 @@ class API {
             });
     }
 
+    public function callAPI($api, $payload, Callable $memberCallback = null) {
+        if (is_null($this->getToken())) {
+            $this->setToken($this->getAccessToken());
+        }
+
+        try {
+            $response = $this->getHttpClient()->post($this->buildAPIUrl($api), [
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                    'Authorization' => 'Bearer '.$this->getToken(),
+                ],
+                'json' => $payload,
+            ]);
+            $raw = $response->getBody();
+            $response = null;
+            unset($response);
+            if (is_null($memberCallback)) {
+                $listener = new InMemoryListener;
+            } else {
+                $listener = new GuildListener($memberCallback);
+            }
+            $parser = new Parser(StreamWrapper::getResource($raw), $listener);
+            $parser->parse();
+
+            return collect($listener->getJson());
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            $body = json_decode($response->getBody(), true);
+
+            if ($response->getStatusCode() == 401 && $body['error'] == 'invalid_token') {
+                $this->setToken(null);
+                $args = func_get_args();
+                return call_user_func_array([$this, __METHOD__], $args);
+            }
+
+            throw $e;
+        }
+    }
+
     protected function getTokenUrl() {
         return static::URL_BASE . static::AUTH_PATH;
     }
@@ -239,46 +280,6 @@ class API {
             'password' => config('services.swgoh_help.password'),
             'grant_type' => 'password',
         ];
-    }
-
-    protected function callAPI($api, $query, Callable $memberCallback = null) {
-        if (is_null($this->getToken())) {
-            $this->setToken($this->getAccessToken());
-        }
-
-        try {
-            $response = $this->getHttpClient()->post($this->buildAPIUrl($api), [
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Bearer '.$this->getToken(),
-                ],
-                'json' => $query,
-            ]);
-            $raw = $response->getBody();
-            $response = null;
-            unset($response);
-            if (is_null($memberCallback)) {
-                $listener = new InMemoryListener;
-            } else {
-                $listener = new GuildListener($memberCallback);
-            }
-            $parser = new Parser(StreamWrapper::getResource($raw), $listener);
-            $parser->parse();
-
-            return collect($listener->getJson());
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $body = json_decode($response->getBody(), true);
-
-            if ($response->getStatusCode() == 401 && $body['error'] == 'invalid_token') {
-                $this->setToken(null);
-                $args = func_get_args();
-                return call_user_func_array([$this, __METHOD__], $args);
-            }
-
-            throw $e;
-        }
     }
 
     protected function buildAPIUrl($path) {
@@ -312,8 +313,16 @@ class API {
         return $this;
     }
 
-    public function setEnums($enum) {
-        $this->enums = $enum;
+    public function withoutEnums() {
+        $this->enums = false;
+
+        return $this;
+    }
+
+    public function lang($lang) {
+        $this->lang = $lang;
+
+        return $this;
     }
 
     protected function getToken() {
