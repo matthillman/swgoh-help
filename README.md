@@ -326,7 +326,7 @@ This class wraps the `getGuild()` call. However, instead of taking an ally code,
 
 <p align="center"><img src="https://media.giphy.com/media/h9hoPqk7Db5fi/giphy.gif"></p>
 
-Yes, that is correct, the ID from the guild's swogh.gg url, which is completely unrelated from swgoh.help.
+Yes, that is correct, the ID from the guild's swogh.gg url, which is completely unrelated to the swgoh.help API.
 
 **But why?**
 
@@ -346,7 +346,7 @@ swgoh.gg *is* the public directory for this information; people will have an eas
 
 Easy, `GuildParser` does steps 2-5 for you (minus the googling, as you provided the guild ID). Once it finds an ally code, it will use that as the input to the swgoh.help call.
 
-**Ok, ok… but just to be sure, what number are you talking about?
+**Ok, ok… but just to be sure, what number are you talking about?**
 
     https://swgoh.gg/g/3577/return-of-the-schwartz/
 
