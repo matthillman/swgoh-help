@@ -3,6 +3,7 @@
     <h1>API wrapper for swgoh.help</h1>
     </a>
 </p>
+
 ## Introduction
 
 Laravel wrapper for the [swgoh.help](https://api.swgoh.help) API.
