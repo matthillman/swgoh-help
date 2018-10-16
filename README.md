@@ -377,6 +377,13 @@ $parser->members();
 $parser->url();
 ```
 
+## Functioning examples
+
+Here are two working Artisan commands using this wrapper
+
+  * [Using the GuildParser class](https://github.com/matthillman/schwartz/blob/master/app/Console/Commands/PullGuild.php)
+  * [Using the ProfileParser and ModsParser classes](https://github.com/matthillman/schwartz/blob/master/app/Console/Commands/PullMods.php)
+
 ## Questions
 
 If you have questions or run into problems, I am available on Discord and hang out on the official api.swgoh.help discord server. Just tag Frax!
