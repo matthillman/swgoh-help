@@ -109,8 +109,10 @@ class API {
             "combatType" => 1,
             "gp" => 1,
             "skills" => 1,
-            "mods" => $mods ? 1 : 0,
         ];
+        if ($mods) {
+            $rosterInner["mods"] = 1;
+        }
         $data = [
             "allycode" => $allyCode,
             "roster" => $fullRoster == static::FULL_ROSTER,
