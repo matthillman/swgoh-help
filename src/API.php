@@ -49,7 +49,6 @@ class API {
                 "level" => 1,
                 "guildName" => 1,
                 "stats" => 1,
-                "roster" => 0,
                 "arena" => 1,
                 "updated" => 1,
             ], $projection),
@@ -59,24 +58,26 @@ class API {
     }
 
     public function getUnits($allyCode, $mods = false, $projection = []) {
+        $inner = [
+            "starLevel" => 1,
+            "level" => 1,
+            "gearLevel" => 1,
+            "gear" => 1,
+            "zetas" => 1,
+            "type" => 1,
+            "gp" => 1,
+        ];
+
+        if ($mods) {
+            $inner['mods'] = 1;
+        }
+
         $data = [
             "allycode" => $allyCode,
             "mods" => $mods,
             "language" => $this->lang,
             "enums" => $this->enums,
-            "project" => array_merge([
-                "player" => 0,
-                "allyCode" => 0,
-                "starLevel" => 1,
-                "level" => 1,
-                "gearLevel" => 1,
-                "gear" => 1,
-                "zetas" => 1,
-                "type" => 1,
-                "mods" => $mods ? 1 : 0,
-                "gp" => 1,
-                "updated" => 0,
-            ], $projection),
+            "project" => array_merge($inner, $projection),
         ];
 
         return $this->callAPI(static::API_UNITS, $data);
@@ -84,17 +85,7 @@ class API {
 
     public function getMods($allyCode) {
         $data = [
-            "player" => 0,
-            "allyCode" => 0,
-            "starLevel" => 0,
-            "level" => 0,
-            "gearLevel" => 0,
-            "gear" => 0,
-            "zetas" => 0,
-            "type" => 0,
             "mods" => 1,
-            "gp" => 0,
-            "updated" => 0,
         ];
 
         return $this->getUnits($allyCode, true, $data);
@@ -125,12 +116,10 @@ class API {
                 "desc" => 1,
                 "members" => 1,
                 "status" => 1,
-                "required" => 0,
                 "bannerColor" => 1,
                 "bannerLogo" => 1,
                 "message" => 1,
                 "gp" => 1,
-                "raid" => 0,
                 "roster" => $fullRoster == static::FULL_UNITS ? $rosterInner : $fullRoster == static::FULL_ROSTER ? [
                     "allyCode" => 1,
                     "name" => 1,
@@ -140,7 +129,6 @@ class API {
                     "arena" => 1,
                     "updated" => 1,
                 ] : 0,
-                "updated" => 0,
             ], $projection),
         ];
 
@@ -246,7 +234,7 @@ class API {
             $response = $e->getResponse();
             $body = json_decode($response->getBody(), true);
 
-            if (($response->getStatusCode() == 401 || $body['code'] == 401) && $body['error'] == 'invalid_token') {
+            if ($response->getStatusCode() == 401 || $body['code'] == 401) {
                 $this->setToken(null);
                 $args = func_get_args();
                 return call_user_func_array([$this, __METHOD__], $args);
