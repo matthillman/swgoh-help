@@ -12,7 +12,7 @@ use JsonStreamingParser\Listener\InMemoryListener;
 
 class API {
 
-    const URL_BASE = 'https://api.swgoh.help';
+    const URL_BASE = 'https://apiv2.swgoh.help';
     const AUTH_PATH = '/auth/signin';
     const ACCESS_TOKEN_KEY = 'access_token';
 
@@ -120,19 +120,37 @@ class API {
                 "bannerLogo" => 1,
                 "message" => 1,
                 "gp" => 1,
-                "roster" => $fullRoster == static::FULL_UNITS ? $rosterInner : $fullRoster == static::FULL_ROSTER ? [
+                "roster" => [
                     "allyCode" => 1,
-                    "name" => 1,
-                    "level" => 1,
-                    "stats" => 1,
-                    "roster" => $rosterInner,
-                    "arena" => 1,
-                    "updated" => 1,
-                ] : 0,
+                ],
             ], $projection),
         ];
 
-        return $this->callAPI(static::API_GUILD, $data, $memberCallback);
+        $guilds = $this->callAPI(static::API_GUILD, $data);
+
+        $guilds->each(function($guild) use ($fullRoster, $rosterInner, $memberCallback) {
+            if ($fullRoster == static::FULL_ROSTER || $fullRoster == static::FULL_UNITS) {
+                $guildAllyCodes = collect($guild['roster'])->pluck('allyCode')->toArray();
+                $playerData = [
+                    "allyCodes" => $guildAllyCodes,
+                    "language" => $this->lang,
+                    "enums" => $this->enums,
+                    "project" => [
+                        "allyCode" => 1,
+                        "name" => 1,
+                        "level" => 1,
+                        "stats" => 1,
+                        "roster" => $rosterInner,
+                        "arena" => 1,
+                        "updated" => 1,
+                    ]
+                ];
+                $this->callAPI(static::FULL_ROSTER ? static::API_PLAYER : static::API_UNITS, $playerData, $memberCallback);
+            }
+        });
+
+
+        return $guilds;
     }
 
     public function getUnitData($match = [], $projection = []) {
