@@ -72,6 +72,10 @@ class GuildListener implements Listener {
         // associate the value
         if (empty($this->stack)) {
             $this->json = $obj['value'];
+        } else if (count($this->stack) == 1) {
+            if (is_callable($this->callback)) {
+                call_user_func($this->callback, $obj['value']);
+            }
         } else {
             $this->insertValue($obj['value']);
         }
@@ -87,13 +91,7 @@ class GuildListener implements Listener {
         if ($current_item['type'] === 'object') {
             $current_item['value'][array_pop($this->keys)] = $value;
         } else {
-            if (head($this->keys) == 'roster' && $this->level == 2) {
-                if (is_callable($this->callback)) {
-                    call_user_func($this->callback, $value);
-                }
-            } else {
-                $current_item['value'][] = $value;
-            }
+            $current_item['value'][] = $value;
         }
         // Replace the current item on the stack.
         $this->stack[] = $current_item;
