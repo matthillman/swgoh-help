@@ -12,7 +12,7 @@ use JsonStreamingParser\Listener\InMemoryListener;
 
 class API {
 
-    const URL_BASE = 'https://apiv2.swgoh.help';
+    const URL_BASE = 'https://api.swgoh.help';
     const AUTH_PATH = '/auth/signin';
     const ACCESS_TOKEN_KEY = 'access_token';
 
