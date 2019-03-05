@@ -252,7 +252,7 @@ class API {
             $response = $e->getResponse();
             $body = json_decode($response->getBody(), true);
 
-            if ($response->getStatusCode() == 401 || $body['code'] == 401) {
+            if ($response->getStatusCode() == 401 || $body['code'] == 401 || $response->getStatusCode() == 503) {
                 $this->setToken(null);
                 $args = func_get_args();
                 return call_user_func_array([$this, __METHOD__], $args);
