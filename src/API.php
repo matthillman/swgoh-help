@@ -8,6 +8,7 @@ use JsonStreamingParser\Parser;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Psr7\StreamWrapper;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use JsonStreamingParser\Listener\InMemoryListener;
 
 class API {
@@ -248,7 +249,7 @@ class API {
             $parser->parse();
 
             return collect($listener->getJson());
-        } catch (ClientException $e) {
+        } catch (ClientException | ServerException $e) {
             $response = $e->getResponse();
             $body = json_decode($response->getBody(), true);
 
