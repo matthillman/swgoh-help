@@ -7,6 +7,7 @@ use SwgohHelp\API as SWGOH;
 class GuildParser {
 
     public $data;
+    protected $useAsAllyCode;
     protected $guild;
     protected $gp;
     protected $gpMap;
@@ -14,19 +15,24 @@ class GuildParser {
     protected $name;
     protected $url = '';
 
-    public function __construct($guild) {
-        $this->url = "https://swgoh.gg/g/${guild}/guild/";
-        $this->guild = $guild;
+    public function __construct($guildOrAllyCode, $isAllyCode = false) {
+        $this->url = "https://swgoh.gg/g/${guildOrAllyCode}/guild/";
+        $this->guild = $guildOrAllyCode;
+        $this->useAsAllyCode = $isAllyCode;
         $this->gpMap = [];
         $this->zetaMap = [];
     }
 
-    public function scrape(Callable $memberCallback) {
-        $response = guzzle()->get($this->url, ['allow_redirects' => [ 'track_redirects' => true ]]);
-        $this->url = head($response->getHeader(config('redirect.history.header')));
-        $anAllyCode = $this->getAnAllyCode();
+    public function scrape(Callable $memberCallback, $mods = false) {
+        if ($this->useAsAllyCode) {
+            $anAllyCode = $this->guild;
+        } else {
+            $response = guzzle()->get($this->url, ['allow_redirects' => [ 'track_redirects' => true ]]);
+            $this->url = head($response->getHeader(config('redirect.history.header')));
+            $anAllyCode = $this->getAnAllyCode();
+        }
 
-        $this->data = swgoh()->getGuild($anAllyCode, $memberCallback, SWGOH::FULL_ROSTER)->first();
+        $this->data = swgoh()->getGuild($anAllyCode, $memberCallback, SWGOH::FULL_ROSTER, $mods)->first();
 
         return $this;
     }
