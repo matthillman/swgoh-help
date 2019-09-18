@@ -41,7 +41,7 @@ class ModsParser {
 
                             return [
                                 'uid' => $mod['id'],
-                                'slot' => (new ModSlot($index))->getKey(),
+                                'slot' => (new ModSlot($index + 1))->getKey(),
                                 'set' => (new ModSet(+$mod['set']))->getKey(),
                                 'pips' => $mod['pips'],
                                 'level' => $mod['level'],

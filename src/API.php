@@ -32,7 +32,7 @@ class API {
      */
     protected $httpClient;
 
-    public $enums = true;
+    public $enums = false;
     public $lang = 'eng_us';
 
     private $clientID;
@@ -52,6 +52,16 @@ class API {
                 "stats" => 1,
                 "arena" => 1,
                 "updated" => 1,
+                "roster" => [
+                    "defId" => 1,
+                    "rarity" => 1,
+                    "level" => 1,
+                    "gear" => 1,
+                    "combatType" => 1,
+                    "gp" => 1,
+                    "skills" => 1,
+                    "relic" => 1,
+                ]
             ], $projection),
         ];
 
@@ -101,6 +111,7 @@ class API {
             "combatType" => 1,
             "gp" => 1,
             "skills" => 1,
+            "relic" => 1,
         ];
         if ($mods) {
             $rosterInner["mods"] = 1;
@@ -129,27 +140,29 @@ class API {
 
         $guilds = $this->callAPI(static::API_GUILD, $data);
 
-        $guilds->each(function($guild) use ($fullRoster, $rosterInner, $memberCallback) {
-            if ($fullRoster == static::FULL_ROSTER || $fullRoster == static::FULL_UNITS) {
-                $guildAllyCodes = collect($guild['roster'])->pluck('allyCode')->toArray();
-                $playerData = [
-                    "allyCodes" => $guildAllyCodes,
-                    "language" => $this->lang,
-                    "enums" => $this->enums,
-                    "project" => [
-                        "allyCode" => 1,
-                        "name" => 1,
-                        "level" => 1,
-                        "stats" => 1,
-                        "roster" => $rosterInner,
-                        "arena" => 1,
-                        "updated" => 1,
-                    ]
-                ];
-                $this->callAPI(static::FULL_ROSTER ? static::API_PLAYER : static::API_UNITS, $playerData, $memberCallback);
-            }
-        });
-
+        if ($fullRoster == static::FULL_ROSTER || $fullRoster == static::FULL_UNITS) {
+            $guilds->each(function($guild) use ($fullRoster, $rosterInner, $memberCallback) {
+                $guildAllyCodes = collect($guild['roster'])->pluck('allyCode')
+                    ->chunk(17)
+                    ->each(function($allyCodeChunk) use ($fullRoster, $rosterInner, $memberCallback) {
+                        $playerData = [
+                            "allycodes" => $allyCodeChunk->values()->toArray(),
+                            "language" => $this->lang,
+                            "enums" => $this->enums,
+                            "project" => [
+                                "allyCode" => 1,
+                                "name" => 1,
+                                "level" => 1,
+                                "stats" => 1,
+                                "roster" => $rosterInner,
+                                "arena" => 1,
+                                "updated" => 1,
+                            ]
+                        ];
+                        $this->callAPI($fullRoster == static::FULL_ROSTER ? static::API_PLAYER : static::API_UNITS, $playerData, $memberCallback);
+                    });
+            });
+        }
 
         return $guilds;
     }
@@ -318,6 +331,12 @@ class API {
     public function setHttpClient(Client $client)
     {
         $this->httpClient = $client;
+
+        return $this;
+    }
+
+    public function withEnums() {
+        $this->enums = true;
 
         return $this;
     }

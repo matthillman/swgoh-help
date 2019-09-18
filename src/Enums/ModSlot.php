@@ -5,10 +5,11 @@ namespace SwgohHelp\Enums;
 use MyCLabs\Enum\Enum;
 
 class ModSlot extends Enum {
-    const square = 0;
-    const arrow = 1;
-    const diamond = 2;
-    const triangle = 3;
-    const circle = 4;
-    const cross = 5;
+    const none = 0;
+    const square = 1;
+    const arrow = 2;
+    const diamond = 3;
+    const triangle = 4;
+    const circle = 5;
+    const cross = 6;
 }
