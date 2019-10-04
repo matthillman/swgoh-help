@@ -19,6 +19,10 @@ class SwgohHelpServiceProvider extends ServiceProvider
             return new API;
         });
 
+        $this->app->bind('statCalc', function () {
+            return new StatCalculator;
+        });
+
         $this->app->bind('guzzle', function () {
             $config = isset($this->app['config']['guzzle']) ? $this->app['config']['guzzle'] : [];
             return new Client($config);

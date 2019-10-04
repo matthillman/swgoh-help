@@ -61,6 +61,10 @@ class API {
                     "gp" => 1,
                     "skills" => 1,
                     "relic" => 1,
+                    "crew" => 1,
+                    "equipped" => 1,
+                    "nameKey" => 1,
+                    "mods" => 1,
                 ]
             ], $projection),
         ];
@@ -112,6 +116,9 @@ class API {
             "gp" => 1,
             "skills" => 1,
             "relic" => 1,
+            "crew" => 1,
+            "equipped" => 1,
+            "nameKey" => 1,
         ];
         if ($mods) {
             $rosterInner["mods"] = 1;

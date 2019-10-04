@@ -38,3 +38,16 @@ if (!function_exists('swgoh')) {
         return app('swgoh');
     }
 }
+
+if (!function_exists('stats')) {
+    /**
+     * Return a swgoh.help API client
+     *
+     * @param  string  $value
+     * @param  array  $options
+     * @return SwgohHelp\API
+     */
+    function stats() {
+        return app('statCalc');
+    }
+}
