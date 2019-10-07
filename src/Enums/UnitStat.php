@@ -65,4 +65,16 @@ class UnitStat extends Enum {
     const UNITSTATSPEEDPERCENTADDITIVE = 57;
     const UNITSTATCOUNTERATTACKRATING = 58;
     const UNITSTATTAUNT = 59;
+
+    public function displayString() {
+        switch ($this->getKey()) {
+            case 'UNITSTATSPEED': return 'speed'; break;
+            case 'UNITSTATATTACKDAMAGE': return 'offense'; break;
+            case 'UNITSTATMAXHEALTH': return 'health'; break;
+            case 'UNITSTATRESISTANCE': return 'tenacity'; break;
+            case 'UNITSTATACCURACY': return 'potency'; break;
+
+            default: return ''; break;
+        }
+    }
 }
