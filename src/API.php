@@ -21,6 +21,7 @@ class API {
     const API_UNITS = 'units';
     const API_GUILD = 'guild';
     const API_DATA = 'data';
+    const API_REGISTRATION = 'registration';
 
     public const FULL_ROSTER = 'roster';
     public const FULL_UNITS = 'units';
@@ -38,6 +39,22 @@ class API {
     private $clientID;
     private $clientSecret;
     private $token;
+
+    public function registration(array $get, array $put = [], array $delete = []) {
+        $data = [];
+
+        if (count($get) > 0) {
+            $data['get'] = $get;
+        }
+        if (count($put) > 0) {
+            $data['put'] = $put;
+        }
+        if (count($delete) > 0) {
+            $data['del'] = $delete;
+        }
+
+        return $this->callAPI(static::API_REGISTRATION, $data);
+    }
 
     public function getPlayer($allyCode, $projection = []) {
         $data = [
@@ -312,7 +329,8 @@ class API {
     }
 
     protected function buildAPIUrl($path) {
-        return static::URL_BASE . '/swgoh' . str_start($path, '/');
+        $middle = $path === static::API_REGISTRATION ? '' : '/swgoh';
+        return static::URL_BASE . $middle . str_start($path, '/');
     }
 
     /**
