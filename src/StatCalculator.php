@@ -22,7 +22,7 @@ class StatCalculator {
      */
     protected $httpClient;
 
-    function addStatsTo($player, $flags = 'gameStyle,statIDs') {
+    function addStatsTo($player, $flags = 'gameStyle,statIDs,calcGP') {
         $query = is_null($flags) ? '' : "?flags=$flags";
         try {
             $response = $this->getHttpClient()->post($this->getURL(static::API_ENDPOINT) . $query, [

@@ -70,6 +70,10 @@ class UnitStat extends Enum {
         switch ($this->getKey()) {
             case 'UNITSTATSPEED': return 'speed'; break;
             case 'UNITSTATATTACKDAMAGE': return 'offense'; break;
+            case 'UNITSTATABILITYPOWER': return 'offense'; break;
+            case 'UNITSTATCRITICALDAMAGE': return 'critdamage'; break;
+            case 'UNITSTATATTACKCRITICALRATING': return 'critchance'; break;
+            case 'UNITSTATABILITYCRITICALRATING': return 'critchance'; break;
             case 'UNITSTATMAXHEALTH': return 'health'; break;
             case 'UNITSTATRESISTANCE': return 'tenacity'; break;
             case 'UNITSTATACCURACY': return 'potency'; break;
