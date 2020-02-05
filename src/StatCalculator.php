@@ -30,7 +30,7 @@ class StatCalculator {
                     'Accept' => 'application/json',
                     'Content-Type' => 'application/json',
                 ],
-                'json' => collect($player)->toArray(),
+                'json' => $player,
             ]);
             $raw = $response->getBody();
             $response = null;

@@ -68,6 +68,8 @@ class API {
                 "guildName" => 1,
                 "stats" => 1,
                 "arena" => 1,
+                "titles" => 1,
+                "portraits" => 1,
                 "updated" => 1,
                 "roster" => [
                     "defId" => 1,
@@ -180,6 +182,8 @@ class API {
                                 "stats" => 1,
                                 "roster" => $rosterInner,
                                 "arena" => 1,
+                                "titles" => 1,
+                                "portraits" => 1,
                                 "updated" => 1,
                             ]
                         ];
