@@ -65,6 +65,7 @@ class UnitStat extends Enum {
     const UNITSTATSPEEDPERCENTADDITIVE = 57;
     const UNITSTATCOUNTERATTACKRATING = 58;
     const UNITSTATTAUNT = 59;
+    const UNITSTATMASTERY = 61;
 
     public function displayString() {
         switch ($this->getKey()) {
@@ -77,6 +78,32 @@ class UnitStat extends Enum {
             case 'UNITSTATMAXHEALTH': return 'health'; break;
             case 'UNITSTATRESISTANCE': return 'tenacity'; break;
             case 'UNITSTATACCURACY': return 'potency'; break;
+
+            default: return ''; break;
+        }
+    }
+
+    public function shortString() {
+        switch ($this->getKey()) {
+            case 'UNITSTATSPEED': return 'speed';
+            case 'UNITSTATOFFENSE': return 'offense';
+            case 'UNITSTATOFFENSEPERCENTADDITIVE': return '% offense';
+            case 'UNITSTATDEFENSE': return 'defense';
+            case 'UNITSTATDEFENSEPERCENTADDITIVE': return '% defense';
+            case 'UNITSTATMAXSHIELD': return 'protection';
+            case 'UNITSTATMAXSHIELDPERCENTADDITIVE': return '% protection';
+            case 'UNITSTATMAXHEALTH': return 'health';
+            case 'UNITSTATMAXHEALTHPERCENTADDITIVE': return '% health';
+            case 'UNITSTATACCURACY': return 'potency';
+            case 'UNITSTATRESISTANCE': return 'tenacity';
+            case 'UNITSTATCRITICALDAMAGE': return 'crit damage';
+            case 'UNITSTATCRITICALCHANCEPERCENTADDITIVE': return 'crit chance';
+            case 'UNITSTATCRITICALNEGATECHANCEPERCENTADDITIVE': return 'crit avoidance';
+            case 'UNITSTATEVASIONNEGATEPERCENTADDITIVE': return 'accuracy';
+
+            case 'UNITSTATCRITICALCHANCE': return 'crit chance';
+            case 'UNITSTATCRITICALNEGATECHANCE': return 'crit avoidance';
+            case 'UNITSTATEVASIONNEGATE': return 'accuracy';
 
             default: return ''; break;
         }
