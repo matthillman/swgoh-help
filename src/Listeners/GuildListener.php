@@ -1,6 +1,6 @@
 <?php
 
-namespace SwgohHelp;
+namespace SwgohHelp\Listeners;
 
 use JsonStreamingParser\Listener;
 
