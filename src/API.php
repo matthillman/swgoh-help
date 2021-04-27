@@ -309,14 +309,12 @@ class API {
     }
 
     protected function getAccessToken() {
-        $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
-
         $response = $this->getHttpClient()->post($this->getTokenUrl(), [
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
-            $postKey => $this->getTokenFields(),
+            'form_params' => $this->getTokenFields(),
         ]);
 
         return json_decode($response->getBody(), true)[static::ACCESS_TOKEN_KEY];
